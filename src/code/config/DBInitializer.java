@@ -1,4 +1,4 @@
-package java.config;
+package code.config;
 
 import java.sql.*;
 

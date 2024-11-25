@@ -1,9 +1,9 @@
-package java.screens;
+package code.screens;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.config.DBConnection;
+
+import code.config.DBConnection;
 import java.sql.*;
 
 public class LoginScreen extends JFrame {
@@ -64,9 +64,9 @@ public class LoginScreen extends JFrame {
         dispose(); // Close the current screen
         switch (role) {
             case "SuperAdmin" -> new SuperAdminScreen();
-            case "BranchManager" -> new BranchManagerScreen(branchId);
-            case "Cashier" -> new CashierScreen(branchId);
-            case "DataEntryOperator" -> new DataEntryOperatorScreen(branchId, userId);
+//            case "BranchManager" -> new BranchManagerScreen(branchId);
+//            case "Cashier" -> new CashierScreen(branchId);
+//            case "DataEntryOperator" -> new DataEntryOperatorScreen(branchId, userId);
             default -> JOptionPane.showMessageDialog(this, "Invalid role assigned!");
         }
     }

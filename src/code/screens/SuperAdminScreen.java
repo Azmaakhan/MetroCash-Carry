@@ -1,7 +1,6 @@
-package java.screens;
+package code.screens;
 
 import javax.swing.*;
-import java.awt.event.*;
 
 public class SuperAdminScreen extends JFrame {
     public SuperAdminScreen() {

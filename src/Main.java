@@ -1,8 +1,8 @@
 import javax.swing.*;
-import java.config.DBInitializer;
-import java.config.OfflineHandler;
-import java.screens.LoginScreen;
-import java.screens.SplashScreen;
+import code.config.DBInitializer;
+import code.config.OfflineHandler;
+import code.screens.LoginScreen;
+import code.screens.SplashScreen;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,10 +1,10 @@
-package java.screens;
+package code.screens;
 
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.config.DBConnection;
+
+import code.config.DBConnection;
 import java.sql.*;
 
 public class ManageProductsScreen extends JFrame {

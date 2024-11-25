@@ -1,8 +1,8 @@
-package java.screens;
+package code.screens;
 
 import javax.swing.*;
 import java.awt.*;
-import java.config.DBConnection;
+import code.config.DBConnection;
 import java.sql.*;
 
 public class EmployeeDialog extends JDialog {
