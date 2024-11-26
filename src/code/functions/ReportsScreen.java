@@ -1,4 +1,4 @@
-package code.screens;
+package code.functions;
 
 //import org.jfree.chart.*;
 //import org.jfree.chart.plot.*;

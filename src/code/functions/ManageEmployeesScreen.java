@@ -1,4 +1,4 @@
-package code.screens;
+package code.functions;
 
 import javax.swing.*;
 import javax.swing.table.*;
