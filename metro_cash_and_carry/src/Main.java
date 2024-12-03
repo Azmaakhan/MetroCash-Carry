@@ -1,16 +1,12 @@
-import javax.swing.*;
-import code.config.DBInitializer;
-import code.config.OfflineHandler;
-import code.functions.LoginScreen;
 import code.functions.SplashScreen;
+
+import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            DBInitializer.initializeDB();
-            OfflineHandler.setOfflineMode(false);
-            new SplashScreen();
-            new LoginScreen();
+            SplashScreen splash = new SplashScreen();
+            splash.setVisible(true);
         });
     }
 }

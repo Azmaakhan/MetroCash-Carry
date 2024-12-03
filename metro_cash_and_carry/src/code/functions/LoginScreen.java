@@ -2,72 +2,75 @@ package code.functions;
 
 import javax.swing.*;
 import java.awt.*;
-
+import java.awt.event.ActionEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import code.config.DBConnection;
-import java.sql.*;
 
 public class LoginScreen extends JFrame {
-    private JTextField emailField;
-    private JPasswordField passwordField;
-
     public LoginScreen() {
         setTitle("Metro POS - Login");
-        setSize(400, 300);
+        setSize(400, 250);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new GridLayout(4, 2));
 
-        add(new JLabel("Email:"));
-        emailField = new JTextField();
-        add(emailField);
+        JPanel panel = new JPanel(new GridLayout(4, 2, 10, 10));
 
-        add(new JLabel("Password:"));
-        passwordField = new JPasswordField();
-        add(passwordField);
+        panel.add(new JLabel("Email:"));
+        JTextField emailField = new JTextField();
+        panel.add(emailField);
+
+        panel.add(new JLabel("Password:"));
+        JPasswordField passwordField = new JPasswordField();
+        panel.add(passwordField);
 
         JButton loginButton = new JButton("Login");
-        loginButton.addActionListener(e -> login());
-        add(loginButton);
+        loginButton.addActionListener((ActionEvent e) -> {
+            String email = emailField.getText();
+            String password = new String(passwordField.getPassword());
+            loginUser(email, password);
+        });
 
-        JButton exitButton = new JButton("Exit");
-        exitButton.addActionListener(e -> System.exit(0));
-        add(exitButton);
+        panel.add(new JLabel());
+        panel.add(loginButton);
 
-        setVisible(true);
+        add(panel);
     }
+    private void loginUser(String email, String password) {
+        try (Connection connection = DBConnection.getConnection()) {
+            String sql = "SELECT role FROM employees WHERE email = ? AND password = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, email);
+            statement.setString(2, password);
 
-    private void login() {
-        String email = emailField.getText();
-        String password = new String(passwordField.getPassword());
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String role = resultSet.getString("role");
+                this.dispose(); // Close Login Screen
 
-        try (Connection conn = DBConnection.getConnection()) {
-            String query = "SELECT * FROM Users WHERE Email = ? AND Password = ?";
-            PreparedStatement stmt = conn.prepareStatement(query);
-            stmt.setString(1, email);
-            stmt.setString(2, password);
-
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                String role = rs.getString("Role");
-                JOptionPane.showMessageDialog(this, "Welcome " + role + "!");
-                navigateToRoleScreen(role, rs.getInt("BranchID"), rs.getInt("UserID"));
+                switch (role) {
+                    case "SuperAdmin":
+                        new SuperAdminPanel().setVisible(true);
+                        break;
+                    case "BranchManager":
+                        new BranchManagerPanel().setVisible(true);
+                        break;
+                    case "DataEntryOperator":
+                        new DataEntryPanel().setVisible(true);
+                        break;
+                    case "Cashier":
+                        new CashierPanel().setVisible(true);
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(this, "Invalid Role!");
+                }
             } else {
-                JOptionPane.showMessageDialog(this, "Invalid credentials!");
+                JOptionPane.showMessageDialog(this, "Invalid Credentials!");
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Database error!");
-        }
-    }
-
-    private void navigateToRoleScreen(String role, int branchId, int userId) {
-        dispose(); // Close the current screen
-        switch (role) {
-            case "SuperAdmin" -> new SuperAdminScreen();
-//            case "BranchManager" -> new BranchManagerScreen(branchId);
-//            case "Cashier" -> new CashierScreen(branchId);
-//            case "DataEntryOperator" -> new DataEntryOperatorScreen(branchId, userId);
-            default -> JOptionPane.showMessageDialog(this, "Invalid role assigned!");
+            JOptionPane.showMessageDialog(this, "Error Logging In: " + ex.getMessage());
         }
     }
 }

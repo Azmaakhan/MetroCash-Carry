@@ -5,24 +5,18 @@ import java.awt.*;
 
 public class SplashScreen extends JFrame {
     public SplashScreen() {
-        setUndecorated(true);
-        setSize(600, 300);
+        setTitle("Metro POS - Splash Screen");
+        setSize(500, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        JLabel label = new JLabel("Metro POS System Loading...", SwingConstants.CENTER);
+
+        JLabel label = new JLabel("Loading Metro POS...", SwingConstants.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 20));
         add(label);
 
-        // Simulate loading
-        JProgressBar progressBar = new JProgressBar();
-        progressBar.setIndeterminate(true);
-        add(progressBar, BorderLayout.SOUTH);
-
-        setVisible(true);
-        try {
-            Thread.sleep(3000); // Simulate loading time
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        dispose();
+        new Timer(3000, e -> {
+            this.dispose();
+            new LoginScreen().setVisible(true);
+        }).start();
     }
 }
