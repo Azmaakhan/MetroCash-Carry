@@ -16,7 +16,7 @@ public class SplashScreen extends JFrame {
 
         new Timer(3000, e -> {
             this.dispose();
-            new LoginScreen().setVisible(true);
         }).start();
+        new LoginScreen().setVisible(true);
     }
 }

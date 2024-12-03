@@ -1,5 +1,7 @@
 package code.functions;
 
+import code.config.DBConnection;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -37,7 +39,7 @@ public class SuperAdminPanel extends JFrame {
         String address = JOptionPane.showInputDialog(this, "Enter Address:");
         String phone = JOptionPane.showInputDialog(this, "Enter Phone Number:");
 
-        try (Connection connection = DatabaseConnection.getConnection()) {
+        try (Connection connection = DBConnection.getConnection()) {
             String sql = "INSERT INTO branches (branch_code, name, city, active, address, phone) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, branchCode);

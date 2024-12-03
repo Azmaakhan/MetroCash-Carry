@@ -60,7 +60,8 @@ public class SuperAdminSetup {
         try (Connection connection = DBConnection.getConnection();
              Statement statement = connection.createStatement()) {
 
-            // Create products table if not exists
+            String dropTableSQL = "DROP TABLE IF EXISTS employees";
+
             String createProductsTable = """
                     CREATE TABLE IF NOT EXISTS products (
                         id INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -70,7 +71,22 @@ public class SuperAdminSetup {
                     );
                     """;
 
+            String createEmployeesTableSQL = """
+                    CREATE TABLE IF NOT EXISTS employees (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        name VARCHAR(255) NOT NULL,
+                        emp_no VARCHAR(50) NOT NULL UNIQUE,
+                        email VARCHAR(255) NOT NULL UNIQUE,
+                        password VARCHAR(255) NOT NULL,
+                        branch_code VARCHAR(50) NOT NULL,
+                        salary DECIMAL(10, 2) NOT NULL,
+                        role VARCHAR(100) NOT NULL
+                    );
+                """;
+
             statement.executeUpdate(createProductsTable);
+            statement.executeUpdate(dropTableSQL);
+            statement.executeUpdate(createEmployeesTableSQL);
 
             System.out.println("Database tables verified/created successfully.");
         } catch (Exception e) {
