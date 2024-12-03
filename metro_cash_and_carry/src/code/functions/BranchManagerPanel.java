@@ -36,6 +36,9 @@ public class BranchManagerPanel extends JFrame {
         JButton reportsButton = new JButton("View Reports");
         reportsButton.addActionListener(this::viewReports);
 
+        JButton changePasswordForAllEmployeesButton = new JButton("Change Password for All Employees");
+        changePasswordForAllEmployeesButton.addActionListener(this::changePasswordForAllEmployees);
+
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener((ActionEvent e) -> {
             dispose();
@@ -46,6 +49,7 @@ public class BranchManagerPanel extends JFrame {
         JPanel panel = new JPanel();
         panel.add(addEmployeeButton);
         panel.add(changePasswordButton);
+        panel.add(changePasswordForAllEmployeesButton);
         panel.add(reportsButton);
 
         panel.add(logoutButton);
@@ -279,4 +283,35 @@ public class BranchManagerPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Error generating report: " + ex.getMessage());
         }
     }
+
+    private void changePasswordForAllEmployees(ActionEvent e) {
+        String newPassword = JOptionPane.showInputDialog(this, "Enter New Password for All Employees:");
+        String confirmPassword = JOptionPane.showInputDialog(this, "Confirm New Password for All Employees:");
+
+        if (newPassword == null || confirmPassword == null) {
+            return; // User canceled
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            JOptionPane.showMessageDialog(this, "Passwords do not match!");
+            return;
+        }
+
+        try (Connection connection = DBConnection.getConnection()) {
+            String sql = "UPDATE employees SET password = ? WHERE branch_code = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, newPassword);
+            statement.setString(2, branchCode);
+
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                JOptionPane.showMessageDialog(this, "Password for all employees updated successfully!");
+            } else {
+                JOptionPane.showMessageDialog(this, "No employees found to update!");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error updating password for all employees: " + ex.getMessage());
+        }
+    }
+
 }

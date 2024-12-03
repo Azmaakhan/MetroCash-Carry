@@ -27,7 +27,6 @@ public class DataEntryPanel extends JFrame {
 
         checkOfflineMode();
 
-        // Buttons
         JButton manageVendorsButton = new JButton("Manage Vendors");
         manageVendorsButton.addActionListener(this::manageVendors);
 
@@ -49,7 +48,6 @@ public class DataEntryPanel extends JFrame {
             new LoginScreen().setVisible(true);
         });
 
-        // Layout
         JPanel panel = new JPanel();
         panel.add(manageVendorsButton);
         panel.add(addProductButton);
