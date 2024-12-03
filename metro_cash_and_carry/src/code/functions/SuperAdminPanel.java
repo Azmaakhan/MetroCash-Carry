@@ -33,6 +33,7 @@ public class SuperAdminPanel extends JFrame {
         JPanel panel = new JPanel();
         panel.add(createBranchButton);
         panel.add(reportsButton);
+        panel.add(logoutButton);
 
         add(panel);
     }

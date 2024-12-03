@@ -14,14 +14,14 @@ public class BranchManagerPanel extends JFrame {
 
     private String branchCode;
 
-    public BranchManagerPanel() {
+    public BranchManagerPanel(String email) {
         setTitle("Branch Manager Panel");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         // Fetch Branch Code for the logged-in Branch Manager
-        branchCode = fetchBranchCode();
+        branchCode = fetchBranchCode(email);
 
         // Buttons
         JButton addEmployeeButton = new JButton("Add Employee");
@@ -37,7 +37,7 @@ public class BranchManagerPanel extends JFrame {
         });
 
         // Layout
-        JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
+        JPanel panel = new JPanel();
         panel.add(addEmployeeButton);
         panel.add(changePasswordButton);
         panel.add(logoutButton);
@@ -45,11 +45,20 @@ public class BranchManagerPanel extends JFrame {
         add(panel);
     }
 
-    private String fetchBranchCode() {
-        // Assuming the Branch Manager's login is done using `employees` table and branchCode is fetched at login
-        // This placeholder implementation assumes you have some user session mechanism.
-        // Replace this with your actual session management logic to fetch the branch code.
-        return "BR001"; // Example branch code
+    private String fetchBranchCode(String email) {
+        try (Connection connection = DBConnection.getConnection()) {
+            String sql = "SELECT branch_code FROM employees WHERE email = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, email);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("branch_code");  // Return the branch code for this manager
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error fetching branch code: " + ex.getMessage());
+        }
+        return null;
     }
 
     private void addEmployee(ActionEvent e) {
@@ -68,10 +77,41 @@ public class BranchManagerPanel extends JFrame {
             return; // User canceled
         }
 
-        String name = JOptionPane.showInputDialog(this, "Enter Employee Name:");
-        String empNo = JOptionPane.showInputDialog(this, "Enter Employee Number:");
-        String email = JOptionPane.showInputDialog(this, "Enter Employee Email:");
-        String salaryStr = JOptionPane.showInputDialog(this, "Enter Salary:");
+        // Create a panel to collect all information in one dialog
+        JPanel panel = new JPanel(new GridLayout(6, 2));
+        JTextField nameField = new JTextField();
+        JTextField empNoField = new JTextField();
+        JTextField emailField = new JTextField();
+        JTextField salaryField = new JTextField();
+        JPasswordField passwordField = new JPasswordField();
+
+        panel.add(new JLabel("Employee Name:"));
+        panel.add(nameField);
+        panel.add(new JLabel("Employee Number:"));
+        panel.add(empNoField);
+        panel.add(new JLabel("Employee Email:"));
+        panel.add(emailField);
+        panel.add(new JLabel("Salary:"));
+        panel.add(salaryField);
+        panel.add(new JLabel("Password:"));
+        panel.add(passwordField);
+
+        int option = JOptionPane.showConfirmDialog(this, panel, "Enter Employee Information", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (option == JOptionPane.CANCEL_OPTION) {
+            return; // User canceled
+        }
+
+        String name = nameField.getText();
+        String empNo = empNoField.getText();
+        String email = emailField.getText();
+        String salaryStr = salaryField.getText();
+        String password = new String(passwordField.getPassword());
+
+        if (name.isEmpty() || empNo.isEmpty() || email.isEmpty() || salaryStr.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "All fields must be filled out.");
+            return;
+        }
 
         try {
             double salary = Double.parseDouble(salaryStr);
@@ -83,7 +123,7 @@ public class BranchManagerPanel extends JFrame {
                 statement.setString(1, name);
                 statement.setString(2, empNo);
                 statement.setString(3, email);
-                statement.setString(4, "Password_123"); // Default password
+                statement.setString(4, password); // Use the entered password
                 statement.setString(5, branchCode);
                 statement.setDouble(6, salary);
                 statement.setString(7, selectedRole);

@@ -55,7 +55,7 @@ public class LoginScreen extends JFrame {
                         new SuperAdminPanel().setVisible(true);
                         break;
                     case "BranchManager":
-                        new BranchManagerPanel().setVisible(true);
+                        new BranchManagerPanel(email).setVisible(true);
                         break;
                     case "DataEntryOperator":
                         new DataEntryPanel().setVisible(true);

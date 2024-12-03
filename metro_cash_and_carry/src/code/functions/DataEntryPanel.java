@@ -39,7 +39,7 @@ public class DataEntryPanel extends JFrame {
         });
 
         // Layout
-        JPanel panel = new JPanel(new GridLayout(4, 1, 10, 10));
+        JPanel panel = new JPanel();
         panel.add(manageVendorsButton);
         panel.add(addProductButton);
         panel.add(syncButton);

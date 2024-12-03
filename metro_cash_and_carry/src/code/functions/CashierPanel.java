@@ -40,7 +40,7 @@ public class CashierPanel extends JFrame {
         });
 
         // Layout
-        JPanel panel = new JPanel(new GridLayout(3, 1, 10, 10));
+        JPanel panel = new JPanel();
         panel.add(processSaleButton);
         panel.add(syncButton);
         panel.add(logoutButton);
