@@ -94,8 +94,9 @@ Users can log in based on their roles:
 
 ---
 
-## Contributors
+## Group Members
 - **Azma** (Lead Developer)
+- **Aiza** (Lead Developer)
 
 ---
 
