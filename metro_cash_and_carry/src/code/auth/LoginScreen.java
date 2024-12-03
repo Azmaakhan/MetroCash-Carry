@@ -53,7 +53,7 @@ public class LoginScreen extends JFrame {
             if (resultSet.next()) {
                 String role = resultSet.getString("role");
                 String branchCode = resultSet.getString("branch_code");
-                this.dispose(); // Close Login Screen
+                this.dispose();
 
                 switch (role) {
                     case "SuperAdmin":
@@ -63,7 +63,7 @@ public class LoginScreen extends JFrame {
                         new BranchManagerPanel(email).setVisible(true);
                         break;
                     case "DataEntryOperator":
-                        new DataEntryPanel().setVisible(true);
+                        new DataEntryPanel(branchCode).setVisible(true);
                         break;
                     case "Cashier":
                         new CashierPanel(branchCode).setVisible(true);

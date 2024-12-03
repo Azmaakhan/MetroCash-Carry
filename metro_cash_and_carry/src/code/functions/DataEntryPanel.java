@@ -14,8 +14,10 @@ import java.sql.SQLException;
 public class DataEntryPanel extends JFrame {
 
     private boolean offlineMode = false;
+    private final String branchCode;
 
-    public DataEntryPanel() {
+    public DataEntryPanel(String branchCode) {
+        this.branchCode = branchCode;
         setTitle("Data Entry Panel");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -160,10 +162,8 @@ public class DataEntryPanel extends JFrame {
     }
 
     private void addProduct(ActionEvent e) {
-        // Create a JPanel to hold all text fields for product details
         JPanel panel = new JPanel(new GridLayout(7, 2));
 
-        // Create labels and text fields for all the product details
         JTextField nameField = new JTextField(20);
         JTextField categoryField = new JTextField(20);
         JTextField originalPriceField = new JTextField(20);
@@ -172,7 +172,6 @@ public class DataEntryPanel extends JFrame {
         JTextField pricePerCartonField = new JTextField(20);
         JTextField stockField = new JTextField(20);
 
-        // Add labels and text fields to the panel
         panel.add(new JLabel("Product Name:"));
         panel.add(nameField);
         panel.add(new JLabel("Category:"));
@@ -188,10 +187,8 @@ public class DataEntryPanel extends JFrame {
         panel.add(new JLabel("Stock:"));
         panel.add(stockField);
 
-        // Show the dialog to get user input
         int option = JOptionPane.showConfirmDialog(this, panel, "Enter Product Details", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-        // If the user clicks 'OK', proceed with the input
         if (option == JOptionPane.OK_OPTION) {
             String name = nameField.getText().trim();
             String category = categoryField.getText().trim();
@@ -219,16 +216,17 @@ public class DataEntryPanel extends JFrame {
                             ", Price Per Unit: " + pricePerUnit + ", Price Per Carton: " + pricePerCarton + ", Stock: " + stock);
                 } else {
                     try (Connection connection = DBConnection.getConnection()) {
-                        String sql = "INSERT INTO products (name, category, stock, original_price, sale_price, price_per_unit, price_per_carton) " +
-                                "VALUES (?, ?, ?, ?, ?, ?, ?)";
+                        String sql = "INSERT INTO products (name, branchCode, category, stock, original_price, sale_price, price_per_unit, price_per_carton) " +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                         PreparedStatement statement = connection.prepareStatement(sql);
                         statement.setString(1, name);
-                        statement.setString(2, category);
-                        statement.setDouble(3, stock);
-                        statement.setDouble(4, originalPrice);
-                        statement.setDouble(5, salePrice);
-                        statement.setDouble(6, pricePerUnit);
-                        statement.setDouble(7, pricePerCarton);
+                        statement.setString(2, branchCode);
+                        statement.setString(3, category);
+                        statement.setDouble(4, stock);
+                        statement.setDouble(5, originalPrice);
+                        statement.setDouble(6, salePrice);
+                        statement.setDouble(7, pricePerUnit);
+                        statement.setDouble(8, pricePerCarton);
                         statement.executeUpdate();
                         JOptionPane.showMessageDialog(this, "Product added successfully!");
                     } catch (SQLException ex) {

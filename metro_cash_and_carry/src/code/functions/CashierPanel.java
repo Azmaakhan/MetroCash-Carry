@@ -64,7 +64,7 @@ public class CashierPanel extends JFrame {
     }
 
     private void processSale(ActionEvent e) {
-        // Fetch product list
+
         List<String> products = getProducts();
         if (products.isEmpty()) {
             JOptionPane.showMessageDialog(this, "No products found.");
@@ -77,16 +77,14 @@ public class CashierPanel extends JFrame {
                 JOptionPane.QUESTION_MESSAGE,
                 null,
                 products.toArray(),
-                products.get(0));
+                products.getFirst());
 
         if (selectedProduct == null || selectedProduct.isEmpty()) {
             return;
         }
 
-        // Get current stock for the selected product
         int currentStock = getProductStock(selectedProduct);
 
-        // Show dialog to enter quantity with current stock info
         String quantityStr = JOptionPane.showInputDialog(this, "Enter Quantity (Current stock: " + currentStock + "):");
         if (quantityStr == null || quantityStr.isEmpty()) {
             return;

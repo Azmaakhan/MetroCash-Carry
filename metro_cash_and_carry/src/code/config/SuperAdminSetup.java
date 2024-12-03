@@ -64,6 +64,7 @@ public class SuperAdminSetup {
                     CREATE TABLE IF NOT EXISTS products (
                         id INT AUTO_INCREMENT PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
+                        branch_code VARCHAR(255) NOT NULL,
                         category VARCHAR(255) NOT NULL,
                         stock DECIMAL(10, 2) NOT NULL,
                         original_price DECIMAL(10, 2) NOT NULL,
