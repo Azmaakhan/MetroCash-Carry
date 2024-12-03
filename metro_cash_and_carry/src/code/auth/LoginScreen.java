@@ -63,7 +63,7 @@ public class LoginScreen extends JFrame {
                         new BranchManagerPanel(email).setVisible(true);
                         break;
                     case "DataEntryOperator":
-                        new DataEntryPanel(branchCode).setVisible(true);
+                        new DataEntryPanel(branchCode, email).setVisible(true);
                         break;
                     case "Cashier":
                         new CashierPanel(email, branchCode).setVisible(true);

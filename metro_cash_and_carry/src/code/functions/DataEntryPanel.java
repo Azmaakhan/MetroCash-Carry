@@ -15,9 +15,11 @@ public class DataEntryPanel extends JFrame {
 
     private boolean offlineMode = false;
     private final String branchCode;
+    private final String email;
 
-    public DataEntryPanel(String branchCode) {
+    public DataEntryPanel(String branchCode, String email) {
         this.branchCode = branchCode;
+        this.email = email;
         setTitle("Data Entry Panel");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -361,39 +363,39 @@ public class DataEntryPanel extends JFrame {
     }
 
     private void changePassword(ActionEvent e) {
-        String currentPassword = JOptionPane.showInputDialog(this, "Enter Current Password:");
-        if (currentPassword == null || currentPassword.isEmpty()) {
-            return;
-        }
+    String currentPassword = JOptionPane.showInputDialog(this, "Enter Current Password:");
+    if (currentPassword == null || currentPassword.isEmpty()) {
+        return;
+    }
 
-        try (Connection connection = DBConnection.getConnection()) {
-            String sql = "SELECT password FROM employees WHERE branch_code = ? AND email = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setString(1, branchCode);
-            statement.setString(2, email);
+    try (Connection connection = DBConnection.getConnection()) {
+        String sql = "SELECT password FROM employees WHERE branch_code = ? AND email = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, branchCode);
+        statement.setString(2, email);
 
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                String dbPassword = resultSet.getString("password");
-                if (!dbPassword.equals(currentPassword)) {
-                    JOptionPane.showMessageDialog(this, "Incorrect current password.");
-                    return;
-                }
-
-                String newPassword = JOptionPane.showInputDialog(this, "Enter New Password:");
-                if (newPassword != null && !newPassword.isEmpty()) {
-                    String updatePasswordSql = "UPDATE employees SET password = ? WHERE branch_code = ? AND email = ?";
-                    PreparedStatement updatePasswordStmt = connection.prepareStatement(updatePasswordSql);
-                    updatePasswordStmt.setString(1, newPassword);
-                    updatePasswordStmt.setString(2, branchCode);
-                    updatePasswordStmt.setString(3, email);
-                    updatePasswordStmt.executeUpdate();
-
-                    JOptionPane.showMessageDialog(this, "Password updated successfully.");
-                }
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            String dbPassword = resultSet.getString("password");
+            if (!dbPassword.equals(currentPassword)) {
+                JOptionPane.showMessageDialog(this, "Incorrect current password.");
+                return;
             }
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Error changing password: " + ex.getMessage());
+
+            String newPassword = JOptionPane.showInputDialog(this, "Enter New Password:");
+            if (newPassword != null && !newPassword.isEmpty()) {
+                String updatePasswordSql = "UPDATE employees SET password = ? WHERE branch_code = ? AND email = ?";
+                PreparedStatement updatePasswordStmt = connection.prepareStatement(updatePasswordSql);
+                updatePasswordStmt.setString(1, newPassword);
+                updatePasswordStmt.setString(2, branchCode);
+                updatePasswordStmt.setString(3, email);
+                updatePasswordStmt.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, "Password updated successfully.");
+            }
         }
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(this, "Error changing password: " + ex.getMessage());
+    }
     }
 }
