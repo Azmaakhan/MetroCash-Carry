@@ -1,9 +1,6 @@
-import code.functions.SplashScreen;
+import code.auth.SplashScreen;
 
 import javax.swing.*;
-
-import static code.config.DBConnection.createDatabase;
-import static code.functions.SuperAdminSetup.*;
 
 public class Main {
     public static void main(String[] args) {

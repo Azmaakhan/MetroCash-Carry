@@ -1,5 +1,6 @@
 package code.functions;
 
+import code.auth.LoginScreen;
 import code.config.DBConnection;
 
 import javax.swing.*;

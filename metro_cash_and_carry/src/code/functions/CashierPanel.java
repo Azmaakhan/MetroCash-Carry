@@ -1,9 +1,9 @@
 package code.functions;
 
+import code.auth.LoginScreen;
 import code.config.DBConnection;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.*;
 import java.sql.Connection;
