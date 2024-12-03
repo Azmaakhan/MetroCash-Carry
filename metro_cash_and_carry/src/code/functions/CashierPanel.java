@@ -62,39 +62,97 @@ public class CashierPanel extends JFrame {
     }
 
     private void processSale(ActionEvent e) {
-        String productName = JOptionPane.showInputDialog(this, "Enter Product Name:");
-        String quantityStr = JOptionPane.showInputDialog(this, "Enter Quantity:");
-        if (productName == null || productName.isEmpty() || quantityStr == null || quantityStr.isEmpty()) {
+        // Fetch product list
+        List<String> products = getProducts();
+        if (products.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No products found.");
+            return;
+        }
+
+        String selectedProduct = (String) JOptionPane.showInputDialog(this,
+                "Select Product:",
+                "Product Selection",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                products.toArray(),
+                products.get(0));
+
+        if (selectedProduct == null || selectedProduct.isEmpty()) {
+            return;
+        }
+
+        // Get current stock for the selected product
+        int currentStock = getProductStock(selectedProduct);
+
+        // Show dialog to enter quantity with current stock info
+        String quantityStr = JOptionPane.showInputDialog(this, "Enter Quantity (Current stock: " + currentStock + "):");
+        if (quantityStr == null || quantityStr.isEmpty()) {
             return;
         }
 
         try {
             int quantity = Integer.parseInt(quantityStr);
+            if (quantity <= 0) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid quantity.");
+                return;
+            }
+            if (currentStock < quantity) {
+                JOptionPane.showMessageDialog(this, "Insufficient stock for this product.");
+                return;
+            }
+
             if (offlineMode) {
-                saveSaleOffline(productName, quantity);
+                saveSaleOffline(selectedProduct, quantity);
             } else {
-                processSaleOnline(productName, quantity);
+                processSaleOnline(selectedProduct, quantity);
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Invalid quantity entered.");
         }
     }
 
+    private List<String> getProducts() {
+        List<String> products = new ArrayList<>();
+        try (Connection connection = DBConnection.getConnection()) {
+            String sql = "SELECT name FROM products";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ResultSet resultSet = statement.executeQuery();
+
+            while (resultSet.next()) {
+                products.add(resultSet.getString("name"));
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error fetching products: " + ex.getMessage());
+        }
+        return products;
+    }
+
+    private int getProductStock(String productName) {
+        int stock = 0;
+        try (Connection connection = DBConnection.getConnection()) {
+            String sql = "SELECT stock FROM products WHERE name = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, productName);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                stock = resultSet.getInt("stock");
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error fetching product stock: " + ex.getMessage());
+        }
+        return stock;
+    }
+
     private void processSaleOnline(String productName, int quantity) {
         try (Connection connection = DBConnection.getConnection()) {
-            String fetchProductSql = "SELECT stock, sale_price FROM products WHERE name = ?";
+            String fetchProductSql = "SELECT sale_price FROM products WHERE name = ?";
             PreparedStatement fetchProductStmt = connection.prepareStatement(fetchProductSql);
             fetchProductStmt.setString(1, productName);
 
             ResultSet resultSet = fetchProductStmt.executeQuery();
             if (resultSet.next()) {
-                int stock = resultSet.getInt("stock");
                 double salePrice = resultSet.getDouble("sale_price");
-
-                if (stock < quantity) {
-                    JOptionPane.showMessageDialog(this, "Insufficient stock for this product.");
-                    return;
-                }
 
                 double totalPrice = salePrice * quantity;
 

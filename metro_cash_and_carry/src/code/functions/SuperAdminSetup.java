@@ -67,6 +67,7 @@ public class SuperAdminSetup {
                         id INT AUTO_INCREMENT PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         category VARCHAR(255) NOT NULL,
+                        stock DECIMAL(10, 2) NOT NULL,
                         original_price DECIMAL(10, 2) NOT NULL,
                         sale_price DECIMAL(10, 2) NOT NULL,
                         price_per_unit DECIMAL(10, 2) NOT NULL,
@@ -83,8 +84,6 @@ public class SuperAdminSetup {
                       );
                    
                     """;
-
-
 
             String createEmployeesTableSQL = """
                     CREATE TABLE IF NOT EXISTS employees (
@@ -107,7 +106,7 @@ public class SuperAdminSetup {
                     "phone VARCHAR(15), " +
                     "active BOOLEAN DEFAULT TRUE)";
 
-//            statement.executeUpdate(dropTableSQL);
+            statement.executeUpdate(dropTableSQL);
             statement.executeUpdate(createProductsTable);
             statement.executeUpdate(sql);
             statement.executeUpdate(createEmployeesTableSQL);

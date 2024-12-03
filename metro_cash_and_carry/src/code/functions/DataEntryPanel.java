@@ -165,6 +165,7 @@ public class DataEntryPanel extends JFrame {
         JTextField salePriceField = new JTextField(20);
         JTextField pricePerUnitField = new JTextField(20);
         JTextField pricePerCartonField = new JTextField(20);
+        JTextField stockField = new JTextField(20);
 
         // Add labels and text fields to the panel
         panel.add(new JLabel("Product Name:"));
@@ -179,6 +180,8 @@ public class DataEntryPanel extends JFrame {
         panel.add(pricePerUnitField);
         panel.add(new JLabel("Price Per Carton:"));
         panel.add(pricePerCartonField);
+        panel.add(new JLabel("Stock:"));
+        panel.add(stockField);
 
         // Show the dialog to get user input
         int option = JOptionPane.showConfirmDialog(this, panel, "Enter Product Details", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -191,6 +194,7 @@ public class DataEntryPanel extends JFrame {
             String salePriceStr = salePriceField.getText().trim();
             String pricePerUnitStr = pricePerUnitField.getText().trim();
             String pricePerCartonStr = pricePerCartonField.getText().trim();
+            String stockStr = stockField.getText().trim();
 
             if (name.isEmpty() || category.isEmpty() || originalPriceStr.isEmpty() || salePriceStr.isEmpty() || pricePerUnitStr.isEmpty() || pricePerCartonStr.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "All fields must be filled out.");
@@ -202,22 +206,24 @@ public class DataEntryPanel extends JFrame {
                 double salePrice = Double.parseDouble(salePriceStr);
                 double pricePerUnit = Double.parseDouble(pricePerUnitStr);
                 double pricePerCarton = Double.parseDouble(pricePerCartonStr);
+                double stock = Double.parseDouble(stockStr);
 
                 if (offlineMode) {
                     saveToOfflineFile("Product: " + name + ", Category: " + category +
                             ", Original Price: " + originalPrice + ", Sale Price: " + salePrice +
-                            ", Price Per Unit: " + pricePerUnit + ", Price Per Carton: " + pricePerCarton);
+                            ", Price Per Unit: " + pricePerUnit + ", Price Per Carton: " + pricePerCarton + ", Stock: " + stock);
                 } else {
                     try (Connection connection = DBConnection.getConnection()) {
-                        String sql = "INSERT INTO products (name, category, original_price, sale_price, price_per_unit, price_per_carton) " +
-                                "VALUES (?, ?, ?, ?, ?, ?)";
+                        String sql = "INSERT INTO products (name, category, stock, original_price, sale_price, price_per_unit, price_per_carton) " +
+                                "VALUES (?, ?, ?, ?, ?, ?, ?)";
                         PreparedStatement statement = connection.prepareStatement(sql);
                         statement.setString(1, name);
                         statement.setString(2, category);
-                        statement.setDouble(3, originalPrice);
-                        statement.setDouble(4, salePrice);
-                        statement.setDouble(5, pricePerUnit);
-                        statement.setDouble(6, pricePerCarton);
+                        statement.setDouble(3, stock);
+                        statement.setDouble(4, originalPrice);
+                        statement.setDouble(5, salePrice);
+                        statement.setDouble(6, pricePerUnit);
+                        statement.setDouble(7, pricePerCarton);
                         statement.executeUpdate();
                         JOptionPane.showMessageDialog(this, "Product added successfully!");
                     } catch (SQLException ex) {
