@@ -44,7 +44,7 @@ public class LoginScreen extends JFrame {
     }
     private void loginUser(String email, String password) {
         try (Connection connection = DBConnection.getConnection()) {
-            String sql = "SELECT role FROM employees WHERE email = ? AND password = ?";
+            String sql = "SELECT role, branch_code FROM employees WHERE email = ? AND password = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, email);
             statement.setString(2, password);
@@ -52,6 +52,7 @@ public class LoginScreen extends JFrame {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 String role = resultSet.getString("role");
+                String branchCode = resultSet.getString("branch_code");
                 this.dispose(); // Close Login Screen
 
                 switch (role) {
@@ -65,7 +66,7 @@ public class LoginScreen extends JFrame {
                         new DataEntryPanel().setVisible(true);
                         break;
                     case "Cashier":
-                        new CashierPanel().setVisible(true);
+                        new CashierPanel(branchCode).setVisible(true);
                         break;
                     default:
                         JOptionPane.showMessageDialog(this, "Invalid Role!");
