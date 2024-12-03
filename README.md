@@ -87,28 +87,6 @@ Users can log in based on their roles:
 
 ---
 
-## Folder Structure
-
-```
-├── src/
-│   ├── main/
-│   │   ├── splash/           # Splash screen logic
-│   │   ├── auth/             # Login and user authentication
-│   │   ├── super_admin/      # Super Admin screens and logic
-│   │   ├── branch_manager/   # Branch Manager screens and logic
-│   │   ├── data_entry/       # Data Entry Operator functionality
-│   │   ├── cashier/          # Cashier sales functionality
-│   └── utils/                # Helper functions and utilities
-├── resources/
-│   ├── styles/               # UI styling and themes
-│   ├── assets/               # Images and icons
-│   └── temp/                 # Offline storage files (data.txt, temp.txt)
-├── README.md                 # Project documentation
-└── MetroPOSSystem.jar        # Executable JAR file
-```
-
----
-
 ## Future Enhancements
 - Enhanced UI/UX for smooth user experience.
 - Advanced analytics with machine learning.
@@ -123,6 +101,3 @@ Users can log in based on their roles:
 
 ## License
 This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
-```
-
-Let me know if you want to tweak or add anything! 🚀
