@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
@@ -121,6 +122,111 @@ public class SuperAdminPanel extends JFrame {
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "Error Creating Branch and Manager: " + ex.getMessage());
             }
+        }
+    }
+
+    private void viewReports(ActionEvent e) {
+        JPanel panel = new JPanel(new GridLayout(3, 2));
+
+        String[] reportOptions = {"Today", "Weekly", "Monthly", "Yearly", "Specify Range"};
+        JComboBox<String> reportTypeComboBox = new JComboBox<>(reportOptions);
+
+        JLabel startDateLabel = new JLabel("Start Date (YYYY-MM-DD):");
+        JTextField startDateField = new JTextField(15);
+        JLabel endDateLabel = new JLabel("End Date (YYYY-MM-DD):");
+        JTextField endDateField = new JTextField(15);
+
+        panel.add(new JLabel("Select Report Type:"));
+        panel.add(reportTypeComboBox);
+        panel.add(startDateLabel);
+        panel.add(startDateField);
+        panel.add(endDateLabel);
+        panel.add(endDateField);
+
+        int option = JOptionPane.showConfirmDialog(this, panel, "Generate Report", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (option == JOptionPane.OK_OPTION) {
+            String reportType = (String) reportTypeComboBox.getSelectedItem();
+            String startDate = startDateField.getText().trim();
+            String endDate = endDateField.getText().trim();
+
+            generateReport(reportType, startDate, endDate);
+        }
+    }
+
+    private void generateReport(String reportType, String startDate, String endDate) {
+        String sql = "";
+        switch (reportType) {
+            case "Today":
+                sql = "SELECT * FROM sales WHERE DATE(sale_date) = CURDATE()";
+                break;
+            case "Weekly":
+                sql = "SELECT * FROM sales WHERE WEEK(sale_date) = WEEK(CURDATE())";
+                break;
+            case "Monthly":
+                sql = "SELECT * FROM sales WHERE MONTH(sale_date) = MONTH(CURDATE())";
+                break;
+            case "Yearly":
+                sql = "SELECT * FROM sales WHERE YEAR(sale_date) = YEAR(CURDATE())";
+                break;
+            case "Specify Range":
+                if (startDate.isEmpty() || endDate.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Start Date and End Date must be provided!");
+                    return;
+                }
+                sql = "SELECT * FROM sales WHERE sale_date BETWEEN ? AND ?";
+                break;
+        }
+
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        try (Connection connection = DBConnection.getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            if (reportType.equals("Specify Range")) {
+                statement.setString(1, startDate);
+                statement.setString(2, endDate);
+            }
+
+            ResultSet resultSet = statement.executeQuery();
+            double totalSales = 0;
+            double totalProfit = 0;
+            double remainingStock = 0;
+
+            while (resultSet.next()) {
+                double saleAmount = resultSet.getDouble("sale_amount");
+                double profit = resultSet.getDouble("profit");
+                double stock = resultSet.getDouble("remaining_stock");
+
+                totalSales += saleAmount;
+                totalProfit += profit;
+                remainingStock += stock;
+
+                dataset.addValue(saleAmount, "Sales", resultSet.getDate("sale_date").toString());
+                dataset.addValue(profit, "Profit", resultSet.getDate("sale_date").toString());
+                dataset.addValue(stock, "Stock", resultSet.getDate("sale_date").toString());
+            }
+
+            JOptionPane.showMessageDialog(this, String.format(
+                    "Report Summary:\nTotal Sales: %.2f\nTotal Profit: %.2f\nRemaining Stock: %.2f",
+                    totalSales, totalProfit, remainingStock
+            ));
+
+            JFreeChart chart = ChartFactory.createBarChart(
+                    "Sales, Profit, and Stock Report",
+                    "Date",
+                    "Amount",
+                    dataset
+            );
+
+            JFrame chartFrame = new JFrame("Report Chart");
+            chartFrame.setSize(800, 600);
+            chartFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            chartFrame.add(new ChartPanel(chart));
+            chartFrame.setVisible(true);
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error generating report: " + ex.getMessage());
         }
     }
 }
