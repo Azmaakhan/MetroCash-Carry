@@ -25,7 +25,10 @@ public class SuperAdminPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Reports Module Coming Soon!");
         });
         JButton logoutButton = new JButton("Logout");
-        
+        logoutButton.addActionListener((ActionEvent e) -> {
+            dispose();
+            new LoginScreen().setVisible(true);
+        });
 
         JPanel panel = new JPanel();
         panel.add(createBranchButton);
