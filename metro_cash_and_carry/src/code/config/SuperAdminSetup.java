@@ -73,6 +73,19 @@ public class SuperAdminSetup {
                     );
                     """;
 
+            String createTableSQL = """
+                CREATE TABLE IF NOT EXISTS sales (
+                    sale_id INT AUTO_INCREMENT PRIMARY KEY,
+                    branch_code VARCHAR(50) NOT NULL,
+                    sale_date DATE NOT NULL,
+                    product_name VARCHAR(255) NOT NULL,
+                    quantity INT NOT NULL,
+                    total_price DECIMAL(10, 2) NOT NULL,
+                    profit DECIMAL(10, 2) NOT NULL,
+                    FOREIGN KEY (branch_code) REFERENCES branches(branch_code)
+                );
+                """;
+
             String createVendorsTable = """
                     CREATE TABLE IF NOT EXISTS vendors (
                           id INT AUTO_INCREMENT PRIMARY KEY,
@@ -80,7 +93,6 @@ public class SuperAdminSetup {
                           address VARCHAR(255) NOT NULL,
                           phone VARCHAR(15) NOT NULL
                       );
-                   
                     """;
 
             String createEmployeesTableSQL = """
@@ -107,6 +119,7 @@ public class SuperAdminSetup {
             statement.executeUpdate(dropTableSQL);
             statement.executeUpdate(createProductsTable);
             statement.executeUpdate(sql);
+            statement.executeUpdate(createTableSQL);
             statement.executeUpdate(createEmployeesTableSQL);
             statement.executeUpdate(createVendorsTable);
 

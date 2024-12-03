@@ -17,8 +17,10 @@ public class CashierPanel extends JFrame {
 
     private boolean offlineMode = false;
     private List<String> offlineTransactions = new ArrayList<>();
+    private final String branchCode;
 
-    public CashierPanel() {
+    public CashierPanel(String branchCode) {
+        this.branchCode = branchCode; // Assign the branch code dynamically
         setTitle("Cashier Panel");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -114,10 +116,11 @@ public class CashierPanel extends JFrame {
     private List<String> getProducts() {
         List<String> products = new ArrayList<>();
         try (Connection connection = DBConnection.getConnection()) {
-            String sql = "SELECT name FROM products";
+            String sql = "SELECT name FROM products WHERE branch_code = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
-            ResultSet resultSet = statement.executeQuery();
+            statement.setString(1, branchCode);
 
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 products.add(resultSet.getString("name"));
             }
@@ -130,9 +133,10 @@ public class CashierPanel extends JFrame {
     private int getProductStock(String productName) {
         int stock = 0;
         try (Connection connection = DBConnection.getConnection()) {
-            String sql = "SELECT stock FROM products WHERE name = ?";
+            String sql = "SELECT stock FROM products WHERE name = ? AND branch_code = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, productName);
+            statement.setString(2, branchCode);
 
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
@@ -146,21 +150,35 @@ public class CashierPanel extends JFrame {
 
     private void processSaleOnline(String productName, int quantity) {
         try (Connection connection = DBConnection.getConnection()) {
-            String fetchProductSql = "SELECT sale_price FROM products WHERE name = ?";
+            String fetchProductSql = "SELECT sale_price, cost_price FROM products WHERE name = ? AND branch_code = ?";
             PreparedStatement fetchProductStmt = connection.prepareStatement(fetchProductSql);
             fetchProductStmt.setString(1, productName);
+            fetchProductStmt.setString(2, branchCode);
 
             ResultSet resultSet = fetchProductStmt.executeQuery();
             if (resultSet.next()) {
                 double salePrice = resultSet.getDouble("sale_price");
+                double costPrice = resultSet.getDouble("cost_price");
 
                 double totalPrice = salePrice * quantity;
+                double profit = (salePrice - costPrice) * quantity;
 
-                String updateStockSql = "UPDATE products SET stock = stock - ? WHERE name = ?";
+                String updateStockSql = "UPDATE products SET stock = stock - ? WHERE name = ? AND branch_code = ?";
                 PreparedStatement updateStockStmt = connection.prepareStatement(updateStockSql);
                 updateStockStmt.setInt(1, quantity);
                 updateStockStmt.setString(2, productName);
+                updateStockStmt.setString(3, branchCode);
                 updateStockStmt.executeUpdate();
+
+                String insertSaleSql = "INSERT INTO sales (branch_code, sale_date, product_name, quantity, total_price, profit) " +
+                        "VALUES (?, CURRENT_DATE, ?, ?, ?, ?)";
+                PreparedStatement insertSaleStmt = connection.prepareStatement(insertSaleSql);
+                insertSaleStmt.setString(1, branchCode);
+                insertSaleStmt.setString(2, productName);
+                insertSaleStmt.setInt(3, quantity);
+                insertSaleStmt.setDouble(4, totalPrice);
+                insertSaleStmt.setDouble(5, profit);
+                insertSaleStmt.executeUpdate();
 
                 JOptionPane.showMessageDialog(this, "Sale processed successfully!\nTotal Price: " + totalPrice);
             } else {
