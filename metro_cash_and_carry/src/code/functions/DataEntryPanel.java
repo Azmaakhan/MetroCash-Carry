@@ -29,6 +29,9 @@ public class DataEntryPanel extends JFrame {
         JButton addProductButton = new JButton("Add Product");
         addProductButton.addActionListener(this::addProduct);
 
+        JButton editProductButton = new JButton("Edit Product");
+        editProductButton.addActionListener(this::editProduct);
+
         JButton syncButton = new JButton("Sync Data");
         syncButton.addActionListener(this::syncData);
 
@@ -42,6 +45,7 @@ public class DataEntryPanel extends JFrame {
         JPanel panel = new JPanel();
         panel.add(manageVendorsButton);
         panel.add(addProductButton);
+        panel.add(editProductButton);
         panel.add(syncButton);
         panel.add(logoutButton);
 
@@ -256,6 +260,101 @@ public class DataEntryPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Data synced successfully!");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Error syncing data: " + ex.getMessage());
+        }
+    }
+
+    private void editProduct(ActionEvent e) {
+        try (Connection connection = DBConnection.getConnection()) {
+            // Fetch all products
+            String fetchProductsSql = "SELECT * FROM products";
+            PreparedStatement statement = connection.prepareStatement(fetchProductsSql);
+            ResultSet resultSet = statement.executeQuery();
+
+            // Prepare product list
+            DefaultListModel<String> productListModel = new DefaultListModel<>();
+            while (resultSet.next()) {
+                productListModel.addElement(resultSet.getString("name"));
+            }
+
+            if (productListModel.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No products available for editing.");
+                return;
+            }
+
+            // Show product selection dialog
+            JList<String> productList = new JList<>(productListModel);
+            int selection = JOptionPane.showConfirmDialog(
+                    this, new JScrollPane(productList), "Select Product to Edit",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE
+            );
+
+            if (selection == JOptionPane.OK_OPTION && !productList.isSelectionEmpty()) {
+                String selectedProduct = productList.getSelectedValue();
+                editProductDetails(selectedProduct);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error fetching products: " + ex.getMessage());
+        }
+    }
+
+    private void editProductDetails(String productName) {
+        try (Connection connection = DBConnection.getConnection()) {
+            // Fetch product details
+            String fetchProductSql = "SELECT * FROM products WHERE name = ?";
+            PreparedStatement statement = connection.prepareStatement(fetchProductSql);
+            statement.setString(1, productName);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (!resultSet.next()) {
+                JOptionPane.showMessageDialog(this, "Product not found.");
+                return;
+            }
+
+            // Extract details
+            String category = resultSet.getString("category");
+            double originalPrice = resultSet.getDouble("original_price");
+            double salePrice = resultSet.getDouble("sale_price");
+            int stock = resultSet.getInt("stock");
+
+            // Create a panel for editing
+            JPanel panel = new JPanel(new GridLayout(5, 2));
+            JTextField categoryField = new JTextField(category, 20);
+            JTextField originalPriceField = new JTextField(String.valueOf(originalPrice), 20);
+            JTextField salePriceField = new JTextField(String.valueOf(salePrice), 20);
+            JTextField stockField = new JTextField(String.valueOf(stock), 20);
+
+            panel.add(new JLabel("Category:"));
+            panel.add(categoryField);
+            panel.add(new JLabel("Original Price:"));
+            panel.add(originalPriceField);
+            panel.add(new JLabel("Sale Price:"));
+            panel.add(salePriceField);
+            panel.add(new JLabel("Stock:"));
+            panel.add(stockField);
+
+            // Show dialog to edit details
+            int option = JOptionPane.showConfirmDialog(this, panel, "Edit Product Details", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (option == JOptionPane.OK_OPTION) {
+                String updatedCategory = categoryField.getText().trim();
+                double updatedOriginalPrice = Double.parseDouble(originalPriceField.getText().trim());
+                double updatedSalePrice = Double.parseDouble(salePriceField.getText().trim());
+                int updatedStock = Integer.parseInt(stockField.getText().trim());
+
+                // Update product in database
+                String updateProductSql = "UPDATE products SET category = ?, original_price = ?, sale_price = ?, stock = ? WHERE name = ?";
+                PreparedStatement updateStatement = connection.prepareStatement(updateProductSql);
+                updateStatement.setString(1, updatedCategory);
+                updateStatement.setDouble(2, updatedOriginalPrice);
+                updateStatement.setDouble(3, updatedSalePrice);
+                updateStatement.setInt(4, updatedStock);
+                updateStatement.setString(5, productName);
+                updateStatement.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, "Product updated successfully!");
+            }
+        } catch (SQLException | NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Error updating product: " + ex.getMessage());
         }
     }
 }
