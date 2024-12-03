@@ -38,6 +38,9 @@ public class DataEntryPanel extends JFrame {
         JButton syncButton = new JButton("Sync Data");
         syncButton.addActionListener(this::syncData);
 
+        JButton passwordChangeButton = new JButton("Change Password");
+        passwordChangeButton.addActionListener(this::changePassword);
+
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener((ActionEvent e) -> {
             dispose();
@@ -354,6 +357,43 @@ public class DataEntryPanel extends JFrame {
             }
         } catch (SQLException | NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Error updating product: " + ex.getMessage());
+        }
+    }
+
+    private void changePassword(ActionEvent e) {
+        String currentPassword = JOptionPane.showInputDialog(this, "Enter Current Password:");
+        if (currentPassword == null || currentPassword.isEmpty()) {
+            return;
+        }
+
+        try (Connection connection = DBConnection.getConnection()) {
+            String sql = "SELECT password FROM employees WHERE branch_code = ? AND email = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, branchCode);
+            statement.setString(2, email);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String dbPassword = resultSet.getString("password");
+                if (!dbPassword.equals(currentPassword)) {
+                    JOptionPane.showMessageDialog(this, "Incorrect current password.");
+                    return;
+                }
+
+                String newPassword = JOptionPane.showInputDialog(this, "Enter New Password:");
+                if (newPassword != null && !newPassword.isEmpty()) {
+                    String updatePasswordSql = "UPDATE employees SET password = ? WHERE branch_code = ? AND email = ?";
+                    PreparedStatement updatePasswordStmt = connection.prepareStatement(updatePasswordSql);
+                    updatePasswordStmt.setString(1, newPassword);
+                    updatePasswordStmt.setString(2, branchCode);
+                    updatePasswordStmt.setString(3, email);
+                    updatePasswordStmt.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, "Password updated successfully.");
+                }
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error changing password: " + ex.getMessage());
         }
     }
 }

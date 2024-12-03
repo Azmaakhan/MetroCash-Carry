@@ -18,9 +18,11 @@ public class CashierPanel extends JFrame {
     private boolean offlineMode = false;
     private List<String> offlineTransactions = new ArrayList<>();
     private final String branchCode;
+    private final String email;
 
-    public CashierPanel(String branchCode) {
-        this.branchCode = branchCode; // Assign the branch code dynamically
+    public CashierPanel(String email, String branchCode) {
+        this.branchCode = branchCode;
+        this.email = email;
         setTitle("Cashier Panel");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -35,6 +37,9 @@ public class CashierPanel extends JFrame {
         JButton syncButton = new JButton("Sync Data");
         syncButton.addActionListener(this::syncData);
 
+        JButton passwordChangeButton = new JButton("Change Password");
+        passwordChangeButton.addActionListener(this::changePassword);
+
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener((ActionEvent e) -> {
             dispose();
@@ -45,6 +50,7 @@ public class CashierPanel extends JFrame {
         JPanel panel = new JPanel();
         panel.add(processSaleButton);
         panel.add(syncButton);
+        panel.add(passwordChangeButton);
         panel.add(logoutButton);
 
         add(panel);
@@ -223,6 +229,43 @@ public class CashierPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Offline transactions synced successfully.");
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(this, "Error clearing offline data: " + ex.getMessage());
+        }
+    }
+
+    private void changePassword(ActionEvent e) {
+        String currentPassword = JOptionPane.showInputDialog(this, "Enter Current Password:");
+        if (currentPassword == null || currentPassword.isEmpty()) {
+            return;
+        }
+
+        try (Connection connection = DBConnection.getConnection()) {
+            String sql = "SELECT password FROM employees WHERE branch_code = ? AND email = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, branchCode);
+            statement.setString(2, email);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String dbPassword = resultSet.getString("password");
+                if (!dbPassword.equals(currentPassword)) {
+                    JOptionPane.showMessageDialog(this, "Incorrect current password.");
+                    return;
+                }
+
+                String newPassword = JOptionPane.showInputDialog(this, "Enter New Password:");
+                if (newPassword != null && !newPassword.isEmpty()) {
+                    String updatePasswordSql = "UPDATE employees SET password = ? WHERE branch_code = ? AND email = ?";
+                    PreparedStatement updatePasswordStmt = connection.prepareStatement(updatePasswordSql);
+                    updatePasswordStmt.setString(1, newPassword);
+                    updatePasswordStmt.setString(2, branchCode);
+                    updatePasswordStmt.setString(3, email);
+                    updatePasswordStmt.executeUpdate();
+
+                    JOptionPane.showMessageDialog(this, "Password updated successfully.");
+                }
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error changing password: " + ex.getMessage());
         }
     }
 }

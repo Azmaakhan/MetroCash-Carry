@@ -66,7 +66,7 @@ public class LoginScreen extends JFrame {
                         new DataEntryPanel(branchCode).setVisible(true);
                         break;
                     case "Cashier":
-                        new CashierPanel(branchCode).setVisible(true);
+                        new CashierPanel(email, branchCode).setVisible(true);
                         break;
                     default:
                         JOptionPane.showMessageDialog(this, "Invalid Role!");
