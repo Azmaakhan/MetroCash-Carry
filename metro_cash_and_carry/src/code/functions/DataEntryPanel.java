@@ -106,54 +106,126 @@ public class DataEntryPanel extends JFrame {
     }
 
     private void addVendorInformation() {
-        String name = JOptionPane.showInputDialog(this, "Enter Vendor Name:");
-        String address = JOptionPane.showInputDialog(this, "Enter Vendor Address:");
-        String phone = JOptionPane.showInputDialog(this, "Enter Vendor Phone:");
+        // Create a JPanel to hold all text fields for vendor details
+        JPanel panel = new JPanel(new GridLayout(4, 2));
 
-        if (offlineMode) {
-            saveToOfflineFile("Vendor: " + name + ", Address: " + address + ", Phone: " + phone);
-        } else {
-            try (Connection connection = DBConnection.getConnection()) {
-                String sql = "INSERT INTO vendors (name, address, phone) VALUES (?, ?, ?)";
-                PreparedStatement statement = connection.prepareStatement(sql);
-                statement.setString(1, name);
-                statement.setString(2, address);
-                statement.setString(3, phone);
-                statement.executeUpdate();
-                JOptionPane.showMessageDialog(this, "Vendor added successfully!");
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Error adding vendor: " + ex.getMessage());
+        // Create labels and text fields for vendor details
+        JTextField nameField = new JTextField(20);
+        JTextField addressField = new JTextField(20);
+        JTextField phoneField = new JTextField(20);
+
+        // Add labels and text fields to the panel
+        panel.add(new JLabel("Vendor Name:"));
+        panel.add(nameField);
+        panel.add(new JLabel("Vendor Address:"));
+        panel.add(addressField);
+        panel.add(new JLabel("Vendor Phone:"));
+        panel.add(phoneField);
+
+        // Show the dialog to get user input
+        int option = JOptionPane.showConfirmDialog(this, panel, "Enter Vendor Details", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        // If the user clicks 'OK', proceed with the input
+        if (option == JOptionPane.OK_OPTION) {
+            String name = nameField.getText().trim();
+            String address = addressField.getText().trim();
+            String phone = phoneField.getText().trim();
+
+            if (name.isEmpty() || address.isEmpty() || phone.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "All fields must be filled out.");
+                return;
+            }
+
+            if (offlineMode) {
+                saveToOfflineFile("Vendor: " + name + ", Address: " + address + ", Phone: " + phone);
+            } else {
+                try (Connection connection = DBConnection.getConnection()) {
+                    String sql = "INSERT INTO vendors (name, address, phone) VALUES (?, ?, ?)";
+                    PreparedStatement statement = connection.prepareStatement(sql);
+                    statement.setString(1, name);
+                    statement.setString(2, address);
+                    statement.setString(3, phone);
+                    statement.executeUpdate();
+                    JOptionPane.showMessageDialog(this, "Vendor added successfully!");
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Error adding vendor: " + ex.getMessage());
+                }
             }
         }
     }
 
     private void addProduct(ActionEvent e) {
-        String name = JOptionPane.showInputDialog(this, "Enter Product Name:");
-        String category = JOptionPane.showInputDialog(this, "Enter Product Category:");
-        String originalPrice = JOptionPane.showInputDialog(this, "Enter Original Price:");
-        String salePrice = JOptionPane.showInputDialog(this, "Enter Sale Price:");
-        String pricePerUnit = JOptionPane.showInputDialog(this, "Enter Price Per Unit:");
-        String pricePerCarton = JOptionPane.showInputDialog(this, "Enter Price Per Carton:");
+        // Create a JPanel to hold all text fields for product details
+        JPanel panel = new JPanel(new GridLayout(7, 2));
 
-        if (offlineMode) {
-            saveToOfflineFile("Product: " + name + ", Category: " + category +
-                    ", Original Price: " + originalPrice + ", Sale Price: " + salePrice +
-                    ", Price Per Unit: " + pricePerUnit + ", Price Per Carton: " + pricePerCarton);
-        } else {
-            try (Connection connection = DBConnection.getConnection()) {
-                String sql = "INSERT INTO products (name, category, original_price, sale_price, price_per_unit, price_per_carton) " +
-                        "VALUES (?, ?, ?, ?, ?, ?)";
-                PreparedStatement statement = connection.prepareStatement(sql);
-                statement.setString(1, name);
-                statement.setString(2, category);
-                statement.setDouble(3, Double.parseDouble(originalPrice));
-                statement.setDouble(4, Double.parseDouble(salePrice));
-                statement.setDouble(5, Double.parseDouble(pricePerUnit));
-                statement.setDouble(6, Double.parseDouble(pricePerCarton));
-                statement.executeUpdate();
-                JOptionPane.showMessageDialog(this, "Product added successfully!");
-            } catch (SQLException | NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "Error adding product: " + ex.getMessage());
+        // Create labels and text fields for all the product details
+        JTextField nameField = new JTextField(20);
+        JTextField categoryField = new JTextField(20);
+        JTextField originalPriceField = new JTextField(20);
+        JTextField salePriceField = new JTextField(20);
+        JTextField pricePerUnitField = new JTextField(20);
+        JTextField pricePerCartonField = new JTextField(20);
+
+        // Add labels and text fields to the panel
+        panel.add(new JLabel("Product Name:"));
+        panel.add(nameField);
+        panel.add(new JLabel("Category:"));
+        panel.add(categoryField);
+        panel.add(new JLabel("Original Price:"));
+        panel.add(originalPriceField);
+        panel.add(new JLabel("Sale Price:"));
+        panel.add(salePriceField);
+        panel.add(new JLabel("Price Per Unit:"));
+        panel.add(pricePerUnitField);
+        panel.add(new JLabel("Price Per Carton:"));
+        panel.add(pricePerCartonField);
+
+        // Show the dialog to get user input
+        int option = JOptionPane.showConfirmDialog(this, panel, "Enter Product Details", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        // If the user clicks 'OK', proceed with the input
+        if (option == JOptionPane.OK_OPTION) {
+            String name = nameField.getText().trim();
+            String category = categoryField.getText().trim();
+            String originalPriceStr = originalPriceField.getText().trim();
+            String salePriceStr = salePriceField.getText().trim();
+            String pricePerUnitStr = pricePerUnitField.getText().trim();
+            String pricePerCartonStr = pricePerCartonField.getText().trim();
+
+            if (name.isEmpty() || category.isEmpty() || originalPriceStr.isEmpty() || salePriceStr.isEmpty() || pricePerUnitStr.isEmpty() || pricePerCartonStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "All fields must be filled out.");
+                return;
+            }
+
+            try {
+                double originalPrice = Double.parseDouble(originalPriceStr);
+                double salePrice = Double.parseDouble(salePriceStr);
+                double pricePerUnit = Double.parseDouble(pricePerUnitStr);
+                double pricePerCarton = Double.parseDouble(pricePerCartonStr);
+
+                if (offlineMode) {
+                    saveToOfflineFile("Product: " + name + ", Category: " + category +
+                            ", Original Price: " + originalPrice + ", Sale Price: " + salePrice +
+                            ", Price Per Unit: " + pricePerUnit + ", Price Per Carton: " + pricePerCarton);
+                } else {
+                    try (Connection connection = DBConnection.getConnection()) {
+                        String sql = "INSERT INTO products (name, category, original_price, sale_price, price_per_unit, price_per_carton) " +
+                                "VALUES (?, ?, ?, ?, ?, ?)";
+                        PreparedStatement statement = connection.prepareStatement(sql);
+                        statement.setString(1, name);
+                        statement.setString(2, category);
+                        statement.setDouble(3, originalPrice);
+                        statement.setDouble(4, salePrice);
+                        statement.setDouble(5, pricePerUnit);
+                        statement.setDouble(6, pricePerCarton);
+                        statement.executeUpdate();
+                        JOptionPane.showMessageDialog(this, "Product added successfully!");
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(this, "Error adding product: " + ex.getMessage());
+                    }
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Error: Please enter valid numerical values for prices.");
             }
         }
     }

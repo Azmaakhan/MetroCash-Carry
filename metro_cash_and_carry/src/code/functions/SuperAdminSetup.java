@@ -60,16 +60,31 @@ public class SuperAdminSetup {
         try (Connection connection = DBConnection.getConnection();
              Statement statement = connection.createStatement()) {
 
-            String dropTableSQL = "DROP TABLE IF EXISTS employees";
+            String dropTableSQL = "DROP TABLE IF EXISTS products";
 
             String createProductsTable = """
                     CREATE TABLE IF NOT EXISTS products (
-                        id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                        id INT AUTO_INCREMENT PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
-                        stock INTEGER NOT NULL,
-                        sale_price DOUBLE NOT NULL
+                        category VARCHAR(255) NOT NULL,
+                        original_price DECIMAL(10, 2) NOT NULL,
+                        sale_price DECIMAL(10, 2) NOT NULL,
+                        price_per_unit DECIMAL(10, 2) NOT NULL,
+                        price_per_carton DECIMAL(10, 2) NOT NULL
                     );
                     """;
+
+            String createVendorsTable = """
+                    CREATE TABLE IF NOT EXISTS vendors (
+                          id INT AUTO_INCREMENT PRIMARY KEY,
+                          name VARCHAR(255) NOT NULL,
+                          address VARCHAR(255) NOT NULL,
+                          phone VARCHAR(15) NOT NULL
+                      );
+                   
+                    """;
+
+
 
             String createEmployeesTableSQL = """
                     CREATE TABLE IF NOT EXISTS employees (
@@ -92,10 +107,11 @@ public class SuperAdminSetup {
                     "phone VARCHAR(15), " +
                     "active BOOLEAN DEFAULT TRUE)";
 
-            statement.executeUpdate(createProductsTable);
 //            statement.executeUpdate(dropTableSQL);
+            statement.executeUpdate(createProductsTable);
             statement.executeUpdate(sql);
             statement.executeUpdate(createEmployeesTableSQL);
+            statement.executeUpdate(createVendorsTable);
 
             System.out.println("Database tables verified/created successfully.");
         } catch (Exception e) {
