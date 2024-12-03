@@ -116,15 +116,12 @@ public class DataEntryPanel extends JFrame {
     }
 
     private void addVendorInformation() {
-        // Create a JPanel to hold all text fields for vendor details
         JPanel panel = new JPanel(new GridLayout(4, 2));
 
-        // Create labels and text fields for vendor details
         JTextField nameField = new JTextField(20);
         JTextField addressField = new JTextField(20);
         JTextField phoneField = new JTextField(20);
 
-        // Add labels and text fields to the panel
         panel.add(new JLabel("Vendor Name:"));
         panel.add(nameField);
         panel.add(new JLabel("Vendor Address:"));
@@ -132,10 +129,8 @@ public class DataEntryPanel extends JFrame {
         panel.add(new JLabel("Vendor Phone:"));
         panel.add(phoneField);
 
-        // Show the dialog to get user input
         int option = JOptionPane.showConfirmDialog(this, panel, "Enter Vendor Details", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-        // If the user clicks 'OK', proceed with the input
         if (option == JOptionPane.OK_OPTION) {
             String name = nameField.getText().trim();
             String address = addressField.getText().trim();
@@ -256,7 +251,6 @@ public class DataEntryPanel extends JFrame {
         try (BufferedReader reader = new BufferedReader(new FileReader("data.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Sync logic based on parsed data
                 System.out.println("Syncing: " + line);
             }
             JOptionPane.showMessageDialog(this, "Data synced successfully!");
@@ -267,12 +261,10 @@ public class DataEntryPanel extends JFrame {
 
     private void editProduct(ActionEvent e) {
         try (Connection connection = DBConnection.getConnection()) {
-            // Fetch all products
             String fetchProductsSql = "SELECT * FROM products";
             PreparedStatement statement = connection.prepareStatement(fetchProductsSql);
             ResultSet resultSet = statement.executeQuery();
 
-            // Prepare product list
             DefaultListModel<String> productListModel = new DefaultListModel<>();
             while (resultSet.next()) {
                 productListModel.addElement(resultSet.getString("name"));
@@ -283,7 +275,6 @@ public class DataEntryPanel extends JFrame {
                 return;
             }
 
-            // Show product selection dialog
             JList<String> productList = new JList<>(productListModel);
             int selection = JOptionPane.showConfirmDialog(
                     this, new JScrollPane(productList), "Select Product to Edit",
@@ -301,7 +292,6 @@ public class DataEntryPanel extends JFrame {
 
     private void editProductDetails(String productName) {
         try (Connection connection = DBConnection.getConnection()) {
-            // Fetch product details
             String fetchProductSql = "SELECT * FROM products WHERE name = ?";
             PreparedStatement statement = connection.prepareStatement(fetchProductSql);
             statement.setString(1, productName);
@@ -312,13 +302,11 @@ public class DataEntryPanel extends JFrame {
                 return;
             }
 
-            // Extract details
             String category = resultSet.getString("category");
             double originalPrice = resultSet.getDouble("original_price");
             double salePrice = resultSet.getDouble("sale_price");
             int stock = resultSet.getInt("stock");
 
-            // Create a panel for editing
             JPanel panel = new JPanel(new GridLayout(5, 2));
             JTextField categoryField = new JTextField(category, 20);
             JTextField originalPriceField = new JTextField(String.valueOf(originalPrice), 20);
@@ -334,7 +322,6 @@ public class DataEntryPanel extends JFrame {
             panel.add(new JLabel("Stock:"));
             panel.add(stockField);
 
-            // Show dialog to edit details
             int option = JOptionPane.showConfirmDialog(this, panel, "Edit Product Details", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
             if (option == JOptionPane.OK_OPTION) {
@@ -343,7 +330,6 @@ public class DataEntryPanel extends JFrame {
                 double updatedSalePrice = Double.parseDouble(salePriceField.getText().trim());
                 int updatedStock = Integer.parseInt(stockField.getText().trim());
 
-                // Update product in database
                 String updateProductSql = "UPDATE products SET category = ?, original_price = ?, sale_price = ?, stock = ? WHERE name = ?";
                 PreparedStatement updateStatement = connection.prepareStatement(updateProductSql);
                 updateStatement.setString(1, updatedCategory);

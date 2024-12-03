@@ -45,7 +45,6 @@ public class BranchManagerPanel extends JFrame {
             new LoginScreen().setVisible(true);
         });
 
-        // Layout
         JPanel panel = new JPanel();
         panel.add(addEmployeeButton);
         panel.add(changePasswordButton);
@@ -86,10 +85,9 @@ public class BranchManagerPanel extends JFrame {
         );
 
         if (selectedRole == null) {
-            return; // User canceled
+            return;
         }
 
-        // Create a panel to collect all information in one dialog
         JPanel panel = new JPanel(new GridLayout(6, 2));
         JTextField nameField = new JTextField();
         JTextField empNoField = new JTextField();
@@ -111,7 +109,7 @@ public class BranchManagerPanel extends JFrame {
         int option = JOptionPane.showConfirmDialog(this, panel, "Enter Employee Information", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (option == JOptionPane.CANCEL_OPTION) {
-            return; // User canceled
+            return;
         }
 
         String name = nameField.getText();
@@ -135,7 +133,7 @@ public class BranchManagerPanel extends JFrame {
                 statement.setString(1, name);
                 statement.setString(2, empNo);
                 statement.setString(3, email);
-                statement.setString(4, password); // Use the entered password
+                statement.setString(4, password);
                 statement.setString(5, branchCode);
                 statement.setDouble(6, salary);
                 statement.setString(7, selectedRole);
@@ -155,7 +153,7 @@ public class BranchManagerPanel extends JFrame {
         String confirmPassword = JOptionPane.showInputDialog(this, "Confirm New Password:");
 
         if (newPassword == null || confirmPassword == null) {
-            return; // User canceled
+            return; 
         }
 
         if (!newPassword.equals(confirmPassword)) {
@@ -289,7 +287,7 @@ public class BranchManagerPanel extends JFrame {
         String confirmPassword = JOptionPane.showInputDialog(this, "Confirm New Password for All Employees:");
 
         if (newPassword == null || confirmPassword == null) {
-            return; // User canceled
+            return; 
         }
 
         if (!newPassword.equals(confirmPassword)) {

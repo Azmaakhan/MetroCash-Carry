@@ -30,7 +30,7 @@ public class CashierPanel extends JFrame {
 
         checkOfflineMode();
 
-        // Buttons
+        
         JButton processSaleButton = new JButton("Process Sale");
         processSaleButton.addActionListener(this::processSale);
 
@@ -46,7 +46,7 @@ public class CashierPanel extends JFrame {
             new LoginScreen().setVisible(true);
         });
 
-        // Layout
+        
         JPanel panel = new JPanel();
         panel.add(processSaleButton);
         panel.add(syncButton);
@@ -223,7 +223,6 @@ public class CashierPanel extends JFrame {
             processSaleOnline(productName, quantity);
         }
 
-        // Clear offline data file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter("data.txt"))) {
             writer.write("");
             JOptionPane.showMessageDialog(this, "Offline transactions synced successfully.");

@@ -21,7 +21,7 @@ public class SplashScreen extends JFrame {
         label2.setFont(new Font("Arial", Font.ITALIC, 20));
 
         panel.add(label);
-        panel.add(Box.createVerticalStrut(10)); // Space between labels
+        panel.add(Box.createVerticalStrut(10));
         panel.add(label2);
 
         add(panel);

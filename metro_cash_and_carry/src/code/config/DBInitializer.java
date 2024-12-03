@@ -7,7 +7,6 @@ public class DBInitializer {
         try (Connection conn = DBConnection.getConnection()) {
             Statement stmt = conn.createStatement();
 
-            // Create Branches table
             stmt.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS Branches (
                     BranchID INT PRIMARY KEY AUTO_INCREMENT,
