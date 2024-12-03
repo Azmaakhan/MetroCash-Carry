@@ -83,9 +83,18 @@ public class SuperAdminSetup {
                         role VARCHAR(100) NOT NULL
                     );
                 """;
+            String sql = "CREATE TABLE IF NOT EXISTS branches (" +
+                    "branch_id INT AUTO_INCREMENT PRIMARY KEY, " +
+                    "branch_code VARCHAR(50) NOT NULL UNIQUE, " +
+                    "name VARCHAR(100), " +
+                    "city VARCHAR(50), " +
+                    "address VARCHAR(255), " +
+                    "phone VARCHAR(15), " +
+                    "active BOOLEAN DEFAULT TRUE)";
 
             statement.executeUpdate(createProductsTable);
-            statement.executeUpdate(dropTableSQL);
+//            statement.executeUpdate(dropTableSQL);
+            statement.executeUpdate(sql);
             statement.executeUpdate(createEmployeesTableSQL);
 
             System.out.println("Database tables verified/created successfully.");
