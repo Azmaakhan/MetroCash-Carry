@@ -36,10 +36,10 @@ public class SuperAdminSetup {
                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, name);
-            statement.setString(2, "SA-001"); // Default Employee Number for Super Admin
+            statement.setString(2, "SA-001");
             statement.setString(3, email);
             statement.setString(4, password);
-            statement.setString(5, "GLOBAL"); // Branch Code for Super Admin
+            statement.setString(5, "GLOBAL");
             statement.setDouble(6, salary);
             statement.setString(7, "SuperAdmin");
 
@@ -131,12 +131,11 @@ public class SuperAdminSetup {
     }
 
     private static void createNecessaryFiles() {
-        // Create temp.txt for offline status
         File tempFile = new File("temp.txt");
         try {
             if (!tempFile.exists()) {
                 try (BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-                    writer.write("false"); // Default to online mode
+                    writer.write("false");
                 }
                 System.out.println("temp.txt created successfully.");
             } else {
@@ -146,7 +145,6 @@ public class SuperAdminSetup {
             System.err.println("Error creating temp.txt: " + e.getMessage());
         }
 
-        // Create data.txt for offline transactions
         File dataFile = new File("data.txt");
         try {
             if (!dataFile.exists()) {

@@ -20,7 +20,6 @@ public class DBInitializer {
                 )
             """);
 
-            // Create Users table
             stmt.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS Users (
                     UserID INT PRIMARY KEY AUTO_INCREMENT,
@@ -34,7 +33,6 @@ public class DBInitializer {
                 )
             """);
 
-            // Create Vendors table
             stmt.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS Vendors (
                     VendorID INT PRIMARY KEY AUTO_INCREMENT,
@@ -46,7 +44,6 @@ public class DBInitializer {
                 )
             """);
 
-            // Create Products table
             stmt.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS Products (
                     ProductID INT PRIMARY KEY AUTO_INCREMENT,
@@ -61,7 +58,6 @@ public class DBInitializer {
                 )
             """);
 
-            // Create Sales table
             stmt.executeUpdate("""
                 CREATE TABLE IF NOT EXISTS Sales (
                     SaleID INT PRIMARY KEY AUTO_INCREMENT,

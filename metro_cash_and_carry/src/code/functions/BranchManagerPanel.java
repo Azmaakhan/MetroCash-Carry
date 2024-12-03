@@ -25,10 +25,8 @@ public class BranchManagerPanel extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Fetch Branch Code for the logged-in Branch Manager
         branchCode = fetchBranchCode(email);
 
-        // Buttons
         JButton addEmployeeButton = new JButton("Add Employee");
         addEmployeeButton.addActionListener(this::addEmployee);
 
