@@ -216,7 +216,7 @@ public class DataEntryPanel extends JFrame {
                             ", Price Per Unit: " + pricePerUnit + ", Price Per Carton: " + pricePerCarton + ", Stock: " + stock);
                 } else {
                     try (Connection connection = DBConnection.getConnection()) {
-                        String sql = "INSERT INTO products (name, branchCode, category, stock, original_price, sale_price, price_per_unit, price_per_carton) " +
+                        String sql = "INSERT INTO products (name, branch_code, category, stock, original_price, sale_price, price_per_unit, price_per_carton) " +
                                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
                         PreparedStatement statement = connection.prepareStatement(sql);
                         statement.setString(1, name);

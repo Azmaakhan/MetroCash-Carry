@@ -148,7 +148,7 @@ public class CashierPanel extends JFrame {
 
     private void processSaleOnline(String productName, int quantity) {
         try (Connection connection = DBConnection.getConnection()) {
-            String fetchProductSql = "SELECT sale_price, cost_price FROM products WHERE name = ? AND branch_code = ?";
+            String fetchProductSql = "SELECT sale_price, original_price FROM products WHERE name = ? AND branch_code = ?";
             PreparedStatement fetchProductStmt = connection.prepareStatement(fetchProductSql);
             fetchProductStmt.setString(1, productName);
             fetchProductStmt.setString(2, branchCode);
@@ -156,7 +156,7 @@ public class CashierPanel extends JFrame {
             ResultSet resultSet = fetchProductStmt.executeQuery();
             if (resultSet.next()) {
                 double salePrice = resultSet.getDouble("sale_price");
-                double costPrice = resultSet.getDouble("cost_price");
+                double costPrice = resultSet.getDouble("original_price");
 
                 double totalPrice = salePrice * quantity;
                 double profit = (salePrice - costPrice) * quantity;
