@@ -100,7 +100,6 @@ public class DataEntryPanel extends JFrame {
             String sql = "SELECT * FROM vendors WHERE name = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, vendorName);
-
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 String info = "Vendor Name: " + resultSet.getString("name") +
@@ -114,10 +113,8 @@ public class DataEntryPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Error fetching vendor: " + ex.getMessage());
         }
     }
-
     private void addVendorInformation() {
         JPanel panel = new JPanel(new GridLayout(4, 2));
-
         JTextField nameField = new JTextField(20);
         JTextField addressField = new JTextField(20);
         JTextField phoneField = new JTextField(20);

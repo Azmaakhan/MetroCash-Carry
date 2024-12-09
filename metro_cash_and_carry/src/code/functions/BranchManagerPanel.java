@@ -188,25 +188,20 @@ public class BranchManagerPanel extends JFrame {
         JTextField startDateField = new JTextField(15);
         JLabel endDateLabel = new JLabel("End Date (YYYY-MM-DD):");
         JTextField endDateField = new JTextField(15);
-
         panel.add(new JLabel("Select Report Type:"));
         panel.add(reportTypeComboBox);
         panel.add(startDateLabel);
         panel.add(startDateField);
         panel.add(endDateLabel);
         panel.add(endDateField);
-
         int option = JOptionPane.showConfirmDialog(this, panel, "Generate Report", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
         if (option == JOptionPane.OK_OPTION) {
             String reportType = (String) reportTypeComboBox.getSelectedItem();
             String startDate = startDateField.getText().trim();
             String endDate = endDateField.getText().trim();
-
             generateReport(reportType, startDate, endDate);
         }
     }
-
     private void generateReport(String reportType, String startDate, String endDate) {
         String sql = "";
         switch (reportType) {
