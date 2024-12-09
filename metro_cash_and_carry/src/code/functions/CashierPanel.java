@@ -242,7 +242,6 @@ public class CashierPanel extends JFrame {
                     JOptionPane.showMessageDialog(this, "Incorrect current password.");
                     return;
                 }
-
                 String newPassword = JOptionPane.showInputDialog(this, "Enter New Password:");
                 if (newPassword != null && !newPassword.isEmpty()) {
                     String updatePasswordSql = "UPDATE employees SET password = ? WHERE branch_code = ? AND email = ?";

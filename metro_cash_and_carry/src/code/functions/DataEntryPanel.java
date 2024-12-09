@@ -118,16 +118,13 @@ public class DataEntryPanel extends JFrame {
         JTextField nameField = new JTextField(20);
         JTextField addressField = new JTextField(20);
         JTextField phoneField = new JTextField(20);
-
         panel.add(new JLabel("Vendor Name:"));
         panel.add(nameField);
         panel.add(new JLabel("Vendor Address:"));
         panel.add(addressField);
         panel.add(new JLabel("Vendor Phone:"));
         panel.add(phoneField);
-
         int option = JOptionPane.showConfirmDialog(this, panel, "Enter Vendor Details", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
         if (option == JOptionPane.OK_OPTION) {
             String name = nameField.getText().trim();
             String address = addressField.getText().trim();
@@ -137,7 +134,6 @@ public class DataEntryPanel extends JFrame {
                 JOptionPane.showMessageDialog(this, "All fields must be filled out.");
                 return;
             }
-
             if (offlineMode) {
                 saveToOfflineFile("Vendor: " + name + ", Address: " + address + ", Phone: " + phone);
             } else {
@@ -158,7 +154,6 @@ public class DataEntryPanel extends JFrame {
 
     private void addProduct(ActionEvent e) {
         JPanel panel = new JPanel(new GridLayout(7, 2));
-
         JTextField nameField = new JTextField(20);
         JTextField categoryField = new JTextField(20);
         JTextField originalPriceField = new JTextField(20);
@@ -166,7 +161,6 @@ public class DataEntryPanel extends JFrame {
         JTextField pricePerUnitField = new JTextField(20);
         JTextField pricePerCartonField = new JTextField(20);
         JTextField stockField = new JTextField(20);
-
         panel.add(new JLabel("Product Name:"));
         panel.add(nameField);
         panel.add(new JLabel("Category:"));

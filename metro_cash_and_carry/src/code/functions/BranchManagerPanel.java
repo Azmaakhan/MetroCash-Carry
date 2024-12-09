@@ -122,10 +122,8 @@ public class BranchManagerPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "All fields must be filled out.");
             return;
         }
-
         try {
             double salary = Double.parseDouble(salaryStr);
-
             try (Connection connection = DBConnection.getConnection()) {
                 String sql = "INSERT INTO employees (name, emp_no, email, password, branch_code, salary, role) " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -137,7 +135,6 @@ public class BranchManagerPanel extends JFrame {
                 statement.setString(5, branchCode);
                 statement.setDouble(6, salary);
                 statement.setString(7, selectedRole);
-
                 statement.executeUpdate();
                 JOptionPane.showMessageDialog(this, selectedRole + " added successfully!");
             }
@@ -147,7 +144,6 @@ public class BranchManagerPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Error adding employee: " + ex.getMessage());
         }
     }
-
     private void changePassword(ActionEvent e) {
         String newPassword = JOptionPane.showInputDialog(this, "Enter New Password:");
         String confirmPassword = JOptionPane.showInputDialog(this, "Confirm New Password:");
@@ -160,13 +156,11 @@ public class BranchManagerPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Passwords do not match!");
             return;
         }
-
         try (Connection connection = DBConnection.getConnection()) {
             String sql = "UPDATE employees SET password = ? WHERE branch_code = ?";
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, newPassword);
             statement.setString(2, branchCode);
-
             int rowsUpdated = statement.executeUpdate();
             if (rowsUpdated > 0) {
                 JOptionPane.showMessageDialog(this, "Password updated successfully!");
@@ -177,13 +171,10 @@ public class BranchManagerPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Error updating password: " + ex.getMessage());
         }
     }
-
     private void viewReports(ActionEvent e) {
         JPanel panel = new JPanel(new GridLayout(3, 2));
-
         String[] reportOptions = {"Today", "Weekly", "Monthly", "Yearly", "Specify Range"};
         JComboBox<String> reportTypeComboBox = new JComboBox<>(reportOptions);
-
         JLabel startDateLabel = new JLabel("Start Date (YYYY-MM-DD):");
         JTextField startDateField = new JTextField(15);
         JLabel endDateLabel = new JLabel("End Date (YYYY-MM-DD):");
