@@ -19,10 +19,8 @@ public class SuperAdminPanel extends JFrame {
         setSize(600, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-
         JButton createBranchButton = new JButton("Create Branch");
         createBranchButton.addActionListener(this::createBranch);
-
         JButton logoutButton = new JButton("Logout");
         logoutButton.addActionListener((ActionEvent e) -> {
             dispose();

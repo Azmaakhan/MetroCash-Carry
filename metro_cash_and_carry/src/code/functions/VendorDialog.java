@@ -8,14 +8,11 @@ import java.sql.*;
 public class VendorDialog extends JDialog {
     private JTextField nameField, contactField, addressField;
     private int vendorId;
-
     public VendorDialog(JFrame parent, String title, Integer vendorId) {
         super(parent, title, true);
         this.vendorId = vendorId != null ? vendorId : -1;
-
         setSize(400, 300);
         setLayout(new GridLayout(4, 2));
-
         add(new JLabel("Name:"));
         nameField = new JTextField();
         add(nameField);

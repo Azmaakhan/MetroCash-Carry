@@ -15,17 +15,13 @@ import java.util.Scanner;
 public class SuperAdminSetup {
     public static void addAdminInterferance() {
         Scanner scanner = new Scanner(System.in);
-
         System.out.println("=== Super Admin Setup ===");
         System.out.print("Enter Super Admin Name: ");
         String name = scanner.nextLine();
-
         System.out.print("Enter Super Admin Email: ");
         String email = scanner.nextLine();
-
         System.out.print("Enter Super Admin Password: ");
         String password = scanner.nextLine();
-
         System.out.print("Enter Salary: ");
         double salary = scanner.nextDouble();
 
@@ -133,7 +129,6 @@ public class SuperAdminSetup {
         } catch (IOException e) {
             System.err.println("Error creating temp.txt: " + e.getMessage());
         }
-
         // Create data.txt for offline transactions
         File dataFile = new File("data.txt");
         try {
