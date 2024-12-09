@@ -52,10 +52,8 @@ public class CashierPanel extends JFrame {
         panel.add(syncButton);
         panel.add(passwordChangeButton);
         panel.add(logoutButton);
-
         add(panel);
     }
-
     private void checkOfflineMode() {
         try (BufferedReader reader = new BufferedReader(new FileReader("temp.txt"))) {
             String status = reader.readLine();
@@ -68,7 +66,6 @@ public class CashierPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Offline mode file not found. Defaulting to online mode.");
         }
     }
-
     private void processSale(ActionEvent e) {
 
         List<String> products = getProducts();
@@ -116,7 +113,6 @@ public class CashierPanel extends JFrame {
             JOptionPane.showMessageDialog(this, "Invalid quantity entered.");
         }
     }
-
     private List<String> getProducts() {
         List<String> products = new ArrayList<>();
         try (Connection connection = DBConnection.getConnection()) {

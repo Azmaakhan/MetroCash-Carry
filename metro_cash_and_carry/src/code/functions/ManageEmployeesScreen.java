@@ -11,7 +11,6 @@ public class ManageEmployeesScreen extends JFrame {
     private JTable employeeTable;
     private DefaultTableModel tableModel;
     private int branchId;
-
     public ManageEmployeesScreen(int branchId) {
         this.branchId = branchId;
 

@@ -17,19 +17,15 @@ public class EmployeeDialog extends JDialog {
 
         setSize(400, 300);
         setLayout(new GridLayout(5, 2));
-
         add(new JLabel("Name:"));
         nameField = new JTextField();
         add(nameField);
-
         add(new JLabel("Email:"));
         emailField = new JTextField();
         add(emailField);
-
         add(new JLabel("Role:"));
         roleDropdown = new JComboBox<>(new String[]{"Cashier", "DataEntryOperator"});
         add(roleDropdown);
-
         add(new JLabel("Salary:"));
         salaryField = new JTextField();
         add(salaryField);

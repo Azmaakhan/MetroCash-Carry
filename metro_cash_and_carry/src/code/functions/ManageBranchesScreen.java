@@ -16,13 +16,11 @@ public class ManageBranchesScreen extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
         // Branch Table
         tableModel = new DefaultTableModel(new String[]{"Branch ID", "Name", "City", "Active", "Address", "Phone", "Num Employees"}, 0);
         branchTable = new JTable();
         JScrollPane scrollPane = new JScrollPane(branchTable);
         add(scrollPane, BorderLayout.CENTER);
-
         // Buttons
         JPanel buttonPanel = new JPanel();
         JButton addButton = new JButton("Add Branch");
@@ -31,12 +29,10 @@ public class ManageBranchesScreen extends JFrame {
         editButton.addActionListener(e -> openEditBranchDialog());
         JButton deleteButton = new JButton("Delete Branch");
         deleteButton.addActionListener(e -> deleteSelectedBranch());
-
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
-
         loadBranchData();
         setVisible(true);
     }
