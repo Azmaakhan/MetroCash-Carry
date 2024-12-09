@@ -13,17 +13,14 @@ public class ManageEmployeesScreen extends JFrame {
     private int branchId;
     public ManageEmployeesScreen(int branchId) {
         this.branchId = branchId;
-
         setTitle("Manage Employees");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
         tableModel = new DefaultTableModel(new String[]{"Employee ID", "Name", "Role", "Email", "Salary"}, 0);
         employeeTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(employeeTable);
         add(scrollPane, BorderLayout.CENTER);
-
         JPanel buttonPanel = new JPanel();
         JButton addButton = new JButton("Add Employee");
         addButton.addActionListener(e -> openAddEmployeeDialog());
@@ -31,12 +28,10 @@ public class ManageEmployeesScreen extends JFrame {
         editButton.addActionListener(e -> openEditEmployeeDialog());
         JButton deleteButton = new JButton("Delete Employee");
         deleteButton.addActionListener(e -> deleteSelectedEmployee());
-
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
-
         loadEmployeeData();
         setVisible(true);
     }

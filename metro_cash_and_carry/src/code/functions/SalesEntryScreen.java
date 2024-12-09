@@ -13,7 +13,6 @@ public class SalesEntryScreen extends JFrame {
     private JTextField productIDField, quantityField;
     private JLabel totalLabel;
     private double totalAmount = 0.0;
-
     public SalesEntryScreen() {
         setTitle("Sales Entry");
         setSize(800, 600);

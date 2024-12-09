@@ -9,22 +9,17 @@ public class ProductDialog extends JDialog {
     private JTextField nameField, categoryField, originalPriceField, salePriceField, unitPriceField, cartonPriceField;
     private JComboBox<String> vendorDropdown;
     private int productId;
-
     public ProductDialog(JFrame parent, String title, Integer productId) {
         super(parent, title, true);
         this.productId = productId != null ? productId : -1;
-
         setSize(400, 400);
         setLayout(new GridLayout(8, 2));
-
         add(new JLabel("Name:"));
         nameField = new JTextField();
         add(nameField);
-
         add(new JLabel("Category:"));
         categoryField = new JTextField();
         add(categoryField);
-
         add(new JLabel("Vendor:"));
         vendorDropdown = new JComboBox<>();
         populateVendorDropdown();

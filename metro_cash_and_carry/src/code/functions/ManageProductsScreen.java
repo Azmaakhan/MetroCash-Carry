@@ -16,12 +16,10 @@ public class ManageProductsScreen extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
         tableModel = new DefaultTableModel(new String[]{"Product ID", "Name", "Category", "Vendor", "Original Price", "Sale Price", "Unit Price", "Carton Price"}, 0);
         productTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(productTable);
         add(scrollPane, BorderLayout.CENTER);
-
         JPanel buttonPanel = new JPanel();
         JButton addButton = new JButton("Add Product");
         addButton.addActionListener(e -> openAddProductDialog());
@@ -29,12 +27,10 @@ public class ManageProductsScreen extends JFrame {
         editButton.addActionListener(e -> openEditProductDialog());
         JButton deleteButton = new JButton("Delete Product");
         deleteButton.addActionListener(e -> deleteSelectedProduct());
-
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
         buttonPanel.add(deleteButton);
         add(buttonPanel, BorderLayout.SOUTH);
-
         loadProductData();
         setVisible(true);
     }

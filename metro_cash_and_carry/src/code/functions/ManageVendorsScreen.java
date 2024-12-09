@@ -16,12 +16,10 @@ public class ManageVendorsScreen extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
         tableModel = new DefaultTableModel(new String[]{"Vendor ID", "Name", "Contact", "Address"}, 0);
         vendorTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(vendorTable);
         add(scrollPane, BorderLayout.CENTER);
-
         JPanel buttonPanel = new JPanel();
         JButton addButton = new JButton("Add Vendor");
         addButton.addActionListener(e -> openAddVendorDialog());
@@ -29,7 +27,6 @@ public class ManageVendorsScreen extends JFrame {
         editButton.addActionListener(e -> openEditVendorDialog());
         JButton deleteButton = new JButton("Delete Vendor");
         deleteButton.addActionListener(e -> deleteSelectedVendor());
-
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
         buttonPanel.add(deleteButton);

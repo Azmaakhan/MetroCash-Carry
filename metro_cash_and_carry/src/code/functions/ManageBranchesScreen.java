@@ -10,7 +10,6 @@ import java.sql.*;
 public class ManageBranchesScreen extends JFrame {
     private JTable branchTable;
     private DefaultTableModel tableModel;
-
     public ManageBranchesScreen() {
         setTitle("Manage Branches");
         setSize(800, 600);
@@ -36,7 +35,6 @@ public class ManageBranchesScreen extends JFrame {
         loadBranchData();
         setVisible(true);
     }
-
     private void loadBranchData() {
         try (Connection conn = DBConnection.getConnection()) {
             String query = "SELECT * FROM Branches";
@@ -63,7 +61,6 @@ public class ManageBranchesScreen extends JFrame {
     private void openAddBranchDialog() {
         new BranchDialog(this, "Add Branch", null);
     }
-
     private void openEditBranchDialog() {
         int selectedRow = branchTable.getSelectedRow();
         if (selectedRow == -1) {
@@ -73,7 +70,6 @@ public class ManageBranchesScreen extends JFrame {
         int branchId = (int) branchTable.getValueAt(selectedRow, 0);
         new BranchDialog(this, "Edit Branch", branchId);
     }
-
     private void deleteSelectedBranch() {
         int selectedRow = branchTable.getSelectedRow();
         if (selectedRow == -1) {

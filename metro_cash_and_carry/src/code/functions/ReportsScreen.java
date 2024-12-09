@@ -13,14 +13,11 @@ public class ReportsScreen extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
         JButton salesReportButton = new JButton("Generate Sales Report");
         salesReportButton.addActionListener(e -> generateSalesReport());
-
         add(salesReportButton, BorderLayout.CENTER);
         setVisible(true);
     }
-
     private void generateSalesReport() {
 //        try (Connection conn = DBConnection.getConnection()) {
 //            String query = "SELECT DATE(SaleDate) AS SaleDate, SUM(Subtotal) AS TotalSales FROM Sales GROUP BY DATE(SaleDate)";
