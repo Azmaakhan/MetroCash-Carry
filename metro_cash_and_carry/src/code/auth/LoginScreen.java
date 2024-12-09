@@ -16,7 +16,7 @@ import code.functions.SuperAdminPanel;
 public class LoginScreen extends JFrame {
     public LoginScreen() {
         setTitle("Metro POS - Login");
-        setSize(400, 250);
+        setSize(400, 260);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 

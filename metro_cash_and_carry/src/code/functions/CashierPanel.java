@@ -24,7 +24,7 @@ public class CashierPanel extends JFrame {
         this.branchCode = branchCode;
         this.email = email;
         setTitle("Cashier Panel");
-        setSize(800, 600);
+        setSize(800, 620);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 

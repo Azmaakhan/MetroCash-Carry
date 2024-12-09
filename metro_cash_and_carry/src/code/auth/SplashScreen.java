@@ -6,7 +6,7 @@ import java.awt.*;
 public class SplashScreen extends JFrame {
     public SplashScreen() {
         setTitle("Metro POS - Splash Screen");
-        setSize(500, 300);
+        setSize(500, 310);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -26,7 +26,7 @@ public class SplashScreen extends JFrame {
 
         add(panel);
 
-        new Timer(3000, e -> {
+        new Timer(3100, e -> {
             this.dispose();
         }).start();
         new LoginScreen().setVisible(true);
