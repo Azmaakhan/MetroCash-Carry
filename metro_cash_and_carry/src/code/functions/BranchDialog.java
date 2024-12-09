@@ -20,7 +20,7 @@ public class BranchDialog extends JDialog {
         nameField = new JTextField();
         add(nameField);
 
-        add(new JLabel("City:"));
+        add(new JLabel("City name:"));
         cityField = new JTextField();
         add(cityField);
 
@@ -28,7 +28,7 @@ public class BranchDialog extends JDialog {
         addressField = new JTextField();
         add(addressField);
 
-        add(new JLabel("Phone:"));
+        add(new JLabel("Phone number:"));
         phoneField = new JTextField();
         add(phoneField);
 
